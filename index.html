@@ -40,7 +40,7 @@
 
     <div class="form-title">Online Admission Application</div>
 
-    <form id="admissionForm" action="https://formsubmit.co/shri.krishna.self.study.center@gmail.com" method="POST" enctype="multipart/form-data">
+    <form action="https://formsubmit.co/shri.krishna.self.study.center@gmail.com" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="_captcha" value="false">
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="_subject" value="New Admission: Shri Krishna Centre">
@@ -99,51 +99,7 @@
         <button type="submit" class="submit-btn">Submit Application</button>
     </form>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const supabaseUrl = "https://ywqqxsohhnazhfownode.supabase.co";
-const supabaseKey = "sb_publishable_IqgtpvVtbbFjcZfrhkyrxQ_MsfkxYo8";
-
-const { createClient } = supabase;
-const supabaseClient = createClient(supabaseUrl, supabaseKey);
-
-const form = document.getElementById("admissionForm");
-
-form.addEventListener("submit", async function(e) {
-    e.preventDefault();
-
-    const formData = new FormData(form);
-
-    try {
-        const photoFile = formData.get("Student Photo");
-        const aadhaarFile = formData.get("Aadhaar Card");
-
-        const photoPath = `photos/${Date.now()}_${photoFile.name}`;
-        await supabaseClient.storage.from("documents").upload(photoPath, photoFile);
-        const photoUrl = supabaseClient.storage.from("documents").getPublicUrl(photoPath).data.publicUrl;
-
-        const aadhaarPath = `aadhaar/${Date.now()}_${aadhaarFile.name}`;
-        await supabaseClient.storage.from("documents").upload(aadhaarPath, aadhaarFile);
-        const aadhaarUrl = supabaseClient.storage.from("documents").getPublicUrl(aadhaarPath).data.publicUrl;
-
-        await supabaseClient.from("admissions").insert([{
-            full_name: formData.get("Full Name"),
-            mobile: formData.get("Mobile"),
-            parent_mobile: formData.get("Parent Mobile"),
-            shift: formData.get("Shift"),
-            joining_date: formData.get("Joining Date"),
-            photo_url: photoUrl,
-            aadhaar_url: aadhaarUrl
-        }]);
-
-        form.submit();
-
-    } catch (error) {
-        alert("Error: " + error.message);
-    }
-});
-</script>
-
 </body>
+
 </html>
+
